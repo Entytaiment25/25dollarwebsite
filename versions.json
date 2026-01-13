@@ -1,7 +1,7 @@
 [
     {
         "date": "2026-01-12",
-        "magnetLink": "magnet:?xt=urn:btih:37c1049922f17e79e3fd1cde8bbda7c49063b6c8&xt=urn:btmh:122093b1ae132b5813d84502fe954624d1fbd9cd7b571b33cf1281cc64621eec5c92&dn=worlds-2026-01-12.zip&xl=2890169206",
+        "magnetLink": "magnet:?xt=urn:btih:9a667d6f7215169c8f304cb7d21728c741d6955c&dn=worlds-2026-01-12.zip&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce",
         "httpsLink": "https://huggingface.co/bl791/25dollarphone/resolve/main/worlds-2026-01-12.zip",
         "size": "2.69 GB",
         "checksum": "519bdf0c8808ee8b60fd802e329b595aa78914a228e2b777f58f49588a8408ef"
