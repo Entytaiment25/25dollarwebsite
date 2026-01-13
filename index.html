@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="logo.png">
+    <title>25dollarphone Server Backup</title>
+    <link rel="stylesheet" href="lib.min.css">
+    <link rel="stylesheet" href="index.css">
+    <style>
+        body {
+            background: radial-gradient(ellipse at center, #3a3b3c 0%, #1a1a1b 100%);
+            min-height: 100vh;
+            max-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="download-card">
+            <div class="header-section">
+                <img src="logo.png" alt="Logo Icon" class="download-icon">
+                <h1>25dollarphone.com</h1>
+            </div>
+
+            <div class="version-selector">
+                <label for="version">Select Version</label>
+                <select id="version" class="version-dropdown" onchange="updateDownloadLink(this.value)">
+                </select>
+            </div>
+
+            <div class="button-wrapper">
+                <a id="downloadBtn"
+                    href="magnet:?xt=urn:btih:37c1049922f17e79e3fd1cde8bbda7c49063b6c8&xt=urn:btmh:122093b1ae132b5813d84502fe954624d1fbd9cd7b571b33cf1281cc64621eec5c92&dn=worlds-2026-01-12.zip&xl=2890169206"
+                    class="button button-primary" style="display: inline-flex; text-decoration: none;">
+                    OPEN MAGNET LINK
+                </a>
+                <a id="httpsBtn" href="https://huggingface.co/bl791/25dollarphone/resolve/main/worlds-2026-01-12.zip"
+                    class="button button-secondary" style="display: none; text-decoration: none; margin-top: 0.5rem;">
+                    DOWNLOAD VIA HTTPS<span class="speed-badge">⚡ Faster</span>
+                </a>
+                <div class="helper-text">💚 Please seed after downloading via torrent</div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">File Size</div>
+                    <div class="info-value" id="fileSize">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">SHA256 Checksum</div>
+                    <div class="checksum-value">
+                        <span id="checksum">-</span>
+                        <button class="copy-btn" onclick="copyChecksum()">COPY</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            'use strict';
+
+            const ELEMENTS = {
+                dropdown: () => document.getElementById('version'),
+                downloadBtn: () => document.getElementById('downloadBtn'),
+                httpsBtn: () => document.getElementById('httpsBtn'),
+                fileSize: () => document.getElementById('fileSize'),
+                checksum: () => document.getElementById('checksum'),
+                buttonWrapper: () => document.querySelector('.button-wrapper')
+            };
+
+            const MESSAGES = {
+                noLinks: '⚠️ Oops! No download links available for this version',
+                seedReminder: '💚 Please seed after downloading via torrent'
+            };
+
+            const COPY_FEEDBACK_DURATION = 1500;
+            const CHECKSUM_PREVIEW_LENGTH = 4;
+
+            let versions = [];
+
+            async function loadVersions() {
+                try {
+                    const response = await fetch('versions.json');
+                    if (!response.ok) throw new Error('Failed to fetch versions');
+                    versions = await response.json();
+                    populateVersions();
+                } catch (error) {
+                    console.error('Error loading versions:', error);
+                    showError('Failed to load version data');
+                }
+            }
+
+            function showError(message) {
+                const wrapper = ELEMENTS.buttonWrapper();
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'helper-text error-text';
+                errorDiv.textContent = `⚠️ ${message}`;
+                errorDiv.style.color = '#dc3545';
+                wrapper.appendChild(errorDiv);
+            }
+
+            function getLatestVersion() {
+                return versions.reduce((latest, current) => {
+                    return new Date(current.date) > new Date(latest.date) ? current : latest;
+                });
+            }
+
+            function createVersionOption(version, isLatest) {
+                const option = document.createElement('option');
+                option.value = version.date;
+                option.textContent = isLatest ? `${version.date} - Latest` : version.date;
+                return option;
+            }
+
+            function populateVersions() {
+                if (!versions.length) return;
+
+                const dropdown = ELEMENTS.dropdown();
+                const latestVersion = getLatestVersion();
+
+                versions.forEach(version => {
+                    const isLatest = version.date === latestVersion.date;
+                    dropdown.appendChild(createVersionOption(version, isLatest));
+                });
+
+                updateDownloadLink(versions[0].date);
+            }
+
+            function formatChecksum(checksum) {
+                if (!checksum || checksum.length < CHECKSUM_PREVIEW_LENGTH * 2) {
+                    return checksum || '-';
+                }
+                const start = checksum.substring(0, CHECKSUM_PREVIEW_LENGTH);
+                const end = checksum.substring(checksum.length - CHECKSUM_PREVIEW_LENGTH);
+                return `${start}...${end}`;
+            }
+
+            function isValidLink(link) {
+                return link && link.trim() !== '';
+            }
+
+            function updateButton(button, link, shouldShow) {
+                if (shouldShow && isValidLink(link)) {
+                    button.href = link;
+                    button.style.display = 'inline-flex';
+                    return true;
+                } else {
+                    button.style.display = 'none';
+                    return false;
+                }
+            }
+
+            function createHelperText(message, isError = false) {
+                const helperText = document.createElement('div');
+                helperText.className = isError ? 'helper-text error-text' : 'helper-text';
+                helperText.textContent = message;
+                if (isError) helperText.style.color = '#dc3545';
+                return helperText;
+            }
+
+            function updateHelperText(buttonWrapper, hasAnyLink) {
+                const existingHelper = buttonWrapper.querySelector('.helper-text');
+                if (existingHelper) existingHelper.remove();
+
+                const message = hasAnyLink ? MESSAGES.seedReminder : MESSAGES.noLinks;
+                buttonWrapper.appendChild(createHelperText(message, !hasAnyLink));
+            }
+
+            function updateFileInfo(version) {
+                ELEMENTS.fileSize().textContent = version.size || '-';
+                const checksumEl = ELEMENTS.checksum();
+                checksumEl.textContent = formatChecksum(version.checksum);
+                checksumEl.dataset.full = version.checksum || '';
+            }
+
+            function updateDownloadLink(versionDate) {
+                const version = versions.find(v => v.date === versionDate);
+                if (!version) return;
+
+                updateFileInfo(version);
+
+                const hasMagnet = updateButton(ELEMENTS.downloadBtn(), version.magnetLink, true);
+                const hasHttps = updateButton(ELEMENTS.httpsBtn(), version.httpsLink, true);
+                const hasAnyLink = hasMagnet || hasHttps;
+
+                updateHelperText(ELEMENTS.buttonWrapper(), hasAnyLink);
+            }
+
+            function copyChecksum(event) {
+                const checksumEl = ELEMENTS.checksum();
+                const fullChecksum = checksumEl.dataset.full || checksumEl.textContent;
+
+                navigator.clipboard.writeText(fullChecksum).then(() => {
+                    const btn = event.target;
+                    const originalText = btn.textContent;
+                    const originalBg = btn.style.background;
+                    const originalColor = btn.style.color;
+
+                    btn.textContent = '✓';
+                    btn.style.background = '#3c8527';
+                    btn.style.color = '#fff';
+
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = originalBg;
+                        btn.style.color = originalColor;
+                    }, COPY_FEEDBACK_DURATION);
+                }).catch(err => {
+                    console.error('Failed to copy:', err);
+                });
+            }
+
+            window.updateDownloadLink = updateDownloadLink;
+            window.copyChecksum = copyChecksum;
+
+            document.addEventListener('DOMContentLoaded', loadVersions);
+        })();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,384 @@
+* {
+    box-sizing: border-box;
+}
+
+@keyframes fadeInBlock {
+    0% {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes floatItem {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+@keyframes pixelPulse {
+
+    0%,
+    100% {
+        box-shadow:
+            0 20px 60px rgba(0, 0, 0, .5),
+            inset 0 1px 0 rgba(255, 255, 255, .1),
+            0 0 0 1px rgba(0, 0, 0, .3);
+    }
+
+    50% {
+        box-shadow:
+            0 22px 65px rgba(0, 0, 0, .6),
+            inset 0 1px 0 rgba(255, 255, 255, .15),
+            0 0 0 1px rgba(0, 0, 0, .3),
+            0 0 20px rgba(60, 133, 39, .1);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, .05) 2px, rgba(0, 0, 0, .05) 4px),
+        repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0, 0, 0, .05) 2px, rgba(0, 0, 0, .05) 4px);
+    pointer-events: none;
+    opacity: 0.3;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-height: 100vh;
+    padding: 1.5rem;
+    z-index: 1;
+}
+
+.download-card {
+    background: linear-gradient(135deg, #48494a 0%, #3d3e3f 100%);
+    border: 4px solid #1e1e1f;
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, .5),
+        inset 0 1px 0 rgba(255, 255, 255, .1),
+        0 0 0 1px rgba(0, 0, 0, .3);
+    padding: 1.5rem;
+    max-width: 460px;
+    width: 100%;
+    position: relative;
+    animation: fadeInBlock 0.5s ease-out, pixelPulse 4s ease-in-out infinite;
+}
+
+.download-card::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    border: 2px solid rgba(255, 255, 255, .05);
+    pointer-events: none;
+}
+
+.header-section {
+    text-align: center;
+    margin-bottom: 1.2rem;
+    position: relative;
+    z-index: 1;
+}
+
+.download-icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 0.3rem;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, .3));
+    animation: floatItem 3s ease-in-out infinite;
+    display: inline-block;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    background: transparent;
+    border: none;
+    vertical-align: middle;
+}
+
+.download-card h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, .5);
+    letter-spacing: 1px;
+}
+
+.version-selector {
+    margin-bottom: 1rem;
+    animation: slideDown 0.5s ease-out 0.2s both;
+}
+
+.version-selector label {
+    display: block;
+    font-size: 0.75rem;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.4rem;
+}
+
+.version-dropdown {
+    width: 100%;
+    background: #313233;
+    border: 3px solid #1e1e1f;
+    box-shadow: inset 0 4px #242425;
+    color: #fff;
+    font-family: MinecraftRegular, sans-serif;
+    font-size: 0.95rem;
+    padding: 0.6rem 0.8rem;
+    cursor: pointer;
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 1.2rem;
+    transition: all 0.2s ease;
+}
+
+.version-dropdown:focus {
+    outline: none;
+    box-shadow: inset 0 4px #242425, 0 0 0 2px #3c8527;
+}
+
+
+.button-wrapper {
+    text-align: center;
+    margin-bottom: 1.2rem;
+    animation: slideDown 0.5s ease-out 0.3s both;
+}
+
+.button-primary {
+    width: 100%;
+    font-size: 1rem;
+    transition: all 0.15s ease;
+    margin: 0 !important;
+}
+
+.button-primary:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow:
+        inset 0 -6px 0 0 var(--btn-primary-inner-shadow-color),
+        inset 3px 3px 0 var(--btn-primary-inner-border-lt-color),
+        inset -3px -9px 0 var(--btn-primary-inner-border-br-color),
+        0 10px 20px rgba(0, 0, 0, .4);
+}
+
+.divider {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #1e1e1f 20%, #1e1e1f 80%, transparent);
+    margin: 1.2rem 0;
+    position: relative;
+}
+
+.divider::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .1) 20%, rgba(255, 255, 255, .1) 80%, transparent);
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+    margin-top: 0.8rem;
+    animation: slideDown 0.5s ease-out 0.5s both;
+}
+
+.info-item {
+    background: rgba(0, 0, 0, .2);
+    border: 2px solid #1e1e1f;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, .3);
+    padding: 0.6rem 0.5rem;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.info-item:hover {
+    background: rgba(0, 0, 0, .3);
+    border-color: #2a2a2b;
+    transform: translateY(-2px);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, .3), 0 4px 8px rgba(0, 0, 0, .2);
+}
+
+.info-label {
+    font-size: 0.7rem;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.25rem;
+}
+
+.info-value {
+    font-size: 0.85rem;
+    color: #fff;
+    font-weight: bold;
+}
+
+.checksum-value {
+    font-family: 'Courier New', monospace;
+    font-size: 0.7rem;
+    color: #3c8527;
+    word-break: break-all;
+    line-height: 1.3;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    justify-content: center;
+}
+
+.copy-btn {
+    background: rgba(60, 133, 39, 0.2);
+    border: 1px solid #3c8527;
+    color: #3c8527;
+    padding: 0.2rem 0.4rem;
+    font-size: 0.65rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: MinecraftRegular, sans-serif;
+}
+
+.copy-btn:hover {
+    background: rgba(60, 133, 39, 0.4);
+}
+
+.copy-btn:active {
+    background: #3c8527;
+    color: #fff;
+}
+
+.speed-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+    border: 2px solid #1e1e1f;
+    box-shadow:
+        inset 0 -2px 0 #cc7a00,
+        inset 1px 1px 0 rgba(255, 235, 59, .6),
+        inset -1px -3px 0 rgba(255, 152, 0, .8);
+    color: #1e1e1f;
+    padding: 0.1rem 0.35rem;
+    font-size: 0.65rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-left: 0.4rem;
+    position: relative;
+    top: -2px;
+    font-family: MinecraftRegular, sans-serif;
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, .3);
+}
+
+.helper-text {
+    font-size: 0.7rem;
+    color: #999;
+    text-align: center;
+    margin-top: 0.6rem;
+    font-family: MinecraftRegular, sans-serif;
+}
+
+@media (max-width: 576px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .download-card {
+        padding: 1rem;
+        border-width: 3px;
+    }
+
+    .download-card::before {
+        top: 6px;
+        left: 6px;
+        right: 6px;
+        bottom: 6px;
+    }
+
+    .download-icon {
+        width: 56px;
+        height: 56px;
+    }
+
+    .download-card h1 {
+        font-size: 1.3rem;
+    }
+
+    .version-dropdown {
+        font-size: 0.9rem;
+        padding: 0.7rem 0.8rem;
+    }
+
+    .button-primary {
+        font-size: 0.95rem;
+        padding: 0.6rem 1rem;
+        min-height: 44px;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+
+    .info-item {
+        padding: 0.7rem 0.5rem;
+    }
+
+    .checksum-value {
+        font-size: 0.65rem;
+        flex-direction: column;
+        gap: 0.4rem;
+    }
+
+    .copy-btn {
+        min-height: 32px;
+        padding: 0.3rem 0.6rem;
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 380px) {
+    .download-card h1 {
+        font-size: 1.1rem;
+    }
+
+    .version-selector label {
+        font-size: 0.7rem;
+    }
+
+    .checksum-value {
+        font-size: 0.6rem;
+    }
+}
