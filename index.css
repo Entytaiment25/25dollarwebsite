@@ -79,6 +79,7 @@ body::before {
     max-height: 100vh;
     padding: 1.5rem;
     z-index: 1;
+    transition: padding 0.4s ease;
 }
 
 .download-card {
@@ -93,6 +94,7 @@ body::before {
     width: 100%;
     position: relative;
     animation: fadeInBlock 0.5s ease-out, pixelPulse 4s ease-in-out infinite;
+    transition: max-width 0.4s ease;
 }
 
 .download-card::before {
@@ -381,4 +383,251 @@ body::before {
     .checksum-value {
         font-size: 0.6rem;
     }
+}
+
+/* ── Tab Navigation ── */
+
+.tab-content {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.tab-content.tab-active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.tab-content.tab-exit {
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.tab-nav {
+    display: flex;
+    gap: 0;
+    margin-bottom: 1.2rem;
+    border: 3px solid #1e1e1f;
+    overflow: hidden;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 0.55rem 0.8rem;
+    background: #313233;
+    border: none;
+    color: #999;
+    font-family: MinecraftRegular, sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.tab-btn:not(:last-child) {
+    border-right: 2px solid #1e1e1f;
+}
+
+.tab-btn:hover {
+    background: #3a3b3c;
+    color: #ccc;
+}
+
+.tab-btn.active {
+    background: #3c8527;
+    color: #fff;
+    box-shadow: inset 0 -3px 0 #2d6a1e, inset 0 1px 0 rgba(255, 255, 255, .15);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, .3);
+}
+
+/* ── Memories Gallery (Masonry) ── */
+
+.memories-gallery {
+    columns: 3;
+    column-gap: 0.6rem;
+}
+
+.memory-item {
+    break-inside: avoid;
+    margin-bottom: 0.6rem;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #1e1e1f;
+    background: rgba(0, 0, 0, .2);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    animation: fadeInBlock 0.4s ease-out both;
+}
+
+.memory-item:hover {
+    border-color: #3c8527;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, .4);
+}
+
+.memory-item img {
+    display: block;
+    width: 100%;
+    height: auto;
+    image-rendering: auto;
+    transition: transform 0.3s ease;
+}
+
+.memory-item:hover img {
+    transform: scale(1.03);
+}
+
+.memory-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, .8));
+    padding: 1.5rem 0.5rem 0.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.memory-item:hover .memory-overlay {
+    opacity: 1;
+}
+
+.memory-caption {
+    font-size: 0.7rem;
+    color: #fff;
+    font-family: MinecraftRegular, sans-serif;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, .6);
+}
+
+.memory-author {
+    font-size: 0.7rem;
+    color: #3c8527;
+    font-family: MinecraftRegular, sans-serif;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, .6);
+}
+
+.memory-date {
+    font-size: 0.6rem;
+    color: #aaa;
+    font-family: MinecraftRegular, sans-serif;
+}
+
+.memories-disclaimer {
+    text-align: center;
+    color: #777;
+    font-size: 0.7rem;
+    font-family: MinecraftRegular, sans-serif;
+    padding: 0.4rem 0.6rem;
+    margin-bottom: 0.8rem;
+    background: rgba(0, 0, 0, .15);
+    border: 1px solid rgba(255, 255, 255, .05);
+}
+
+.memories-loading,
+.memories-empty {
+    text-align: center;
+    color: #999;
+    font-size: 0.8rem;
+    padding: 2rem 0;
+    font-family: MinecraftRegular, sans-serif;
+}
+
+/* ── Lightbox ── */
+
+.lightbox {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, .9);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.lightbox.active {
+    display: flex;
+}
+
+.lightbox img {
+    max-width: 90vw;
+    max-height: 80vh;
+    object-fit: contain;
+    border: 4px solid #1e1e1f;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, .6);
+    cursor: default;
+}
+
+.lightbox-caption {
+    color: #ccc;
+    font-family: MinecraftRegular, sans-serif;
+    font-size: 0.8rem;
+    margin-top: 0.8rem;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, .5);
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 2rem;
+    cursor: pointer;
+    font-family: MinecraftRegular, sans-serif;
+    line-height: 1;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.lightbox-close:hover {
+    opacity: 1;
+}
+
+/* ── Memories responsive ── */
+
+@media (max-width: 576px) {
+    .memories-gallery {
+        columns: 1;
+    }
+
+    .tab-btn {
+        font-size: 0.75rem;
+        padding: 0.5rem 0.5rem;
+    }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+    .memories-gallery {
+        columns: 2;
+    }
+
+    body.memories-active .download-card {
+        max-width: 650px;
+    }
+}
+
+/* ── Memories-active body adjustments ── */
+
+body.memories-active .download-card {
+    max-width: 900px;
+}
+
+body.memories-active .container {
+    max-height: none;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
 }

@@ -12,7 +12,6 @@
         body {
             background: radial-gradient(ellipse at center, #3a3b3c 0%, #1a1a1b 100%);
             min-height: 100vh;
-            max-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -20,6 +19,11 @@
             margin: 0;
             overflow: hidden;
             position: relative;
+        }
+
+        body.memories-active {
+            overflow-y: auto;
+            align-items: flex-start;
         }
     </style>
 </head>
@@ -32,43 +36,68 @@
                 <h1>25dollarphone.com</h1>
             </div>
 
-            <div class="version-selector">
-                <label for="version">Select Version</label>
-                <select id="version" class="version-dropdown" onchange="updateDownloadLink(this.value)">
-                </select>
+            <div class="tab-nav">
+                <button class="tab-btn active" data-tab="downloads" onclick="switchTab('downloads')">Downloads</button>
+                <button class="tab-btn" data-tab="memories" onclick="switchTab('memories')">Memories</button>
             </div>
 
-            <div class="button-wrapper">
-                <a id="downloadBtn"
-                    href="magnet:?xt=urn:btih:37c1049922f17e79e3fd1cde8bbda7c49063b6c8&xt=urn:btmh:122093b1ae132b5813d84502fe954624d1fbd9cd7b571b33cf1281cc64621eec5c92&dn=worlds-2026-01-12.zip&xl=2890169206"
-                    class="button button-primary" style="display: inline-flex; text-decoration: none;">
-                    OPEN MAGNET LINK
-                </a>
-                <a id="httpsBtn" href="https://huggingface.co/bl791/25dollarphone/resolve/main/worlds-2026-01-12.zip"
-                    class="button button-secondary" style="display: none; text-decoration: none; margin-top: 0.5rem;">
-                    DOWNLOAD VIA HTTPS<span class="speed-badge">⚡ Faster</span>
-                </a>
-                <div class="helper-text">💚 Please seed after downloading via torrent</div>
-            </div>
-
-            <div class="divider"></div>
-
-            <div class="info-grid">
-                <div class="info-item">
-                    <div class="info-label">File Size</div>
-                    <div class="info-value" id="fileSize">-</div>
+            <div class="tab-content tab-active" id="tab-downloads">
+                <div class="version-selector">
+                    <label for="version">Select Version</label>
+                    <select id="version" class="version-dropdown" onchange="updateDownloadLink(this.value)">
+                    </select>
                 </div>
-                <div class="info-item">
-                    <div class="info-label">SHA256 Checksum</div>
-                    <div class="checksum-value">
-                        <span id="checksum">-</span>
-                        <button class="copy-btn" onclick="copyChecksum()">COPY</button>
+
+                <div class="button-wrapper">
+                    <a id="downloadBtn"
+                        href="magnet:?xt=urn:btih:37c1049922f17e79e3fd1cde8bbda7c49063b6c8&xt=urn:btmh:122093b1ae132b5813d84502fe954624d1fbd9cd7b571b33cf1281cc64621eec5c92&dn=worlds-2026-01-12.zip&xl=2890169206"
+                        class="button button-primary" style="display: inline-flex; text-decoration: none;">
+                        OPEN MAGNET LINK
+                    </a>
+                    <a id="httpsBtn"
+                        href="https://huggingface.co/bl791/25dollarphone/resolve/main/worlds-2026-01-12.zip"
+                        class="button button-secondary"
+                        style="display: none; text-decoration: none; margin-top: 0.5rem;">
+                        DOWNLOAD VIA HTTPS<span class="speed-badge">⚡ Faster</span>
+                    </a>
+                    <div class="helper-text">💚 Please seed after downloading via torrent</div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">File Size</div>
+                        <div class="info-value" id="fileSize">-</div>
                     </div>
+                    <div class="info-item">
+                        <div class="info-label">SHA256 Checksum</div>
+                        <div class="checksum-value">
+                            <span id="checksum">-</span>
+                            <button class="copy-btn" onclick="copyChecksum()">COPY</button>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- end tab-downloads -->
+
+            <div class="tab-content" id="tab-memories" style="display:none;">
+                <div class="memories-disclaimer">⚠️ Not all images may have accurate timestamps. Not all images from the
+                    Discord are 100% backed up.</div>
+                <div class="memories-gallery" id="memoriesGallery">
+                    <div class="memories-loading">Loading memories...</div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Lightbox overlay -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+        <img src="" alt="" id="lightboxImg">
+        <div class="lightbox-caption" id="lightboxCaption"></div>
+        <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+    </div>
+
+    <script src="public/img/images.js"></script>
     <script>
         (function () {
             'use strict';
@@ -229,6 +258,150 @@
 
             document.addEventListener('DOMContentLoaded', loadVersions);
         })();
+
+        // Tab switching
+        function switchTab(tabName) {
+            const current = document.querySelector('.tab-content.tab-active');
+            const next = document.getElementById('tab-' + tabName);
+
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.querySelector('.tab-btn[data-tab="' + tabName + '"]').classList.add('active');
+
+            if (current && current !== next) {
+                current.classList.add('tab-exit');
+                current.classList.remove('tab-active');
+                setTimeout(() => {
+                    current.classList.remove('tab-exit');
+                    current.style.display = 'none';
+                    next.style.display = 'block';
+                    // Force reflow so the enter animation plays
+                    void next.offsetWidth;
+                    next.classList.add('tab-active');
+                }, 200);
+            } else {
+                next.style.display = 'block';
+                void next.offsetWidth;
+                next.classList.add('tab-active');
+            }
+
+            if (tabName === 'memories') {
+                document.body.classList.add('memories-active');
+                loadMemories();
+            } else {
+                document.body.classList.remove('memories-active');
+            }
+        }
+
+        // Memories gallery — MEMORY_IMAGES loaded from public/img/images.js
+        // Run ./generate-images.sh after adding new images
+        const IMG_BASE = 'public/img/';
+        const DEFAULT_AUTHOR = '@entytaiment25';
+        let memoriesLoaded = false;
+
+        function parseTimestamp(entry, filename) {
+            // Try YYYY-MM-DD_HH.MM.SS pattern
+            let m = filename.match(/(\d{4})-(\d{2})-(\d{2})_(\d{2})\.(\d{2})\.(\d{2})/);
+            if (m) return new Date(`${m[1]}-${m[2]}-${m[3]}T${m[4]}:${m[5]}:${m[6]}`);
+            // Try YYYY-MM-DD_HH-MM-SS pattern
+            m = filename.match(/(\d{4})-(\d{2})-(\d{2})_(\d{2})-(\d{2})-(\d{2})/);
+            if (m) return new Date(`${m[1]}-${m[2]}-${m[3]}T${m[4]}:${m[5]}:${m[6]}`);
+            // Try YYYY-MM-DD (date only)
+            m = filename.match(/(\d{4})-(\d{2})-(\d{2})/);
+            if (m) return new Date(`${m[1]}-${m[2]}-${m[3]}`);
+            // Fall back to explicit timestamp from the entry
+            if (entry.timestamp) return new Date(entry.timestamp);
+            return new Date(0);
+        }
+
+        function loadMemories() {
+            if (memoriesLoaded) return;
+
+            const gallery = document.getElementById('memoriesGallery');
+
+            const sorted = [...MEMORY_IMAGES]
+                .map(entry => {
+                    const isObj = typeof entry === 'object';
+                    const file = isObj ? entry.file : entry;
+                    const author = isObj ? entry.author : null;
+                    return { file, date: parseTimestamp(isObj ? entry : {}, file), author };
+                })
+                .sort((a, b) => b.date - a.date);
+
+            gallery.innerHTML = '';
+
+            if (sorted.length === 0) {
+                gallery.innerHTML = '<div class="memories-empty">No memories yet</div>';
+                return;
+            }
+
+            sorted.forEach(({ file, date, author }) => {
+                const src = IMG_BASE + file;
+                const displayAuthor = author || DEFAULT_AUTHOR;
+                const item = document.createElement('div');
+                item.className = 'memory-item';
+
+                const img = document.createElement('img');
+                img.src = src;
+                img.alt = file;
+                img.loading = 'lazy';
+                img.onclick = () => openLightbox(src, date, displayAuthor);
+
+                const overlay = document.createElement('div');
+                overlay.className = 'memory-overlay';
+
+                const authorEl = document.createElement('span');
+                authorEl.className = 'memory-author';
+                authorEl.textContent = displayAuthor;
+                overlay.appendChild(authorEl);
+
+                const dateStr = date.toLocaleDateString('en-US', {
+                    year: 'numeric', month: 'short', day: 'numeric',
+                    hour: '2-digit', minute: '2-digit'
+                });
+
+                const dateEl = document.createElement('span');
+                dateEl.className = 'memory-date';
+                dateEl.textContent = dateStr;
+                overlay.appendChild(dateEl);
+
+                item.appendChild(img);
+                item.appendChild(overlay);
+                gallery.appendChild(item);
+            });
+
+            memoriesLoaded = true;
+        }
+
+        function openLightbox(src, date, author) {
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightboxImg');
+            const captionEl = document.getElementById('lightboxCaption');
+
+            img.src = src;
+            let text = author || '';
+            if (date instanceof Date && date.getTime() > 0) {
+                const dateStr = date.toLocaleDateString('en-US', {
+                    year: 'numeric', month: 'long', day: 'numeric',
+                    hour: '2-digit', minute: '2-digit'
+                });
+                text += (text ? ' · ' : '') + dateStr;
+            }
+            captionEl.textContent = text;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox(event) {
+            if (event && event.target !== event.currentTarget && event.target.id !== 'lightboxImg') return;
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+            const isMemories = document.getElementById('tab-memories').style.display !== 'none';
+            document.body.style.overflow = isMemories ? 'auto' : 'hidden';
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeLightbox();
+        });
     </script>
 </body>
 
