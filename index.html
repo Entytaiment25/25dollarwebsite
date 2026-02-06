@@ -21,8 +21,9 @@
             position: relative;
         }
 
-        body.memories-active {
-            overflow-y: auto;
+        body.memories-active,
+        body.history-active {
+            overflow-y: auto !important;
             align-items: flex-start;
         }
     </style>
@@ -39,6 +40,7 @@
             <div class="tab-nav">
                 <button class="tab-btn active" data-tab="downloads" onclick="switchTab('downloads')">Downloads</button>
                 <button class="tab-btn" data-tab="memories" onclick="switchTab('memories')">Memories</button>
+                <button class="tab-btn" data-tab="history" onclick="switchTab('history')">History</button>
             </div>
 
             <div class="tab-content tab-active" id="tab-downloads">
@@ -86,6 +88,10 @@
                 <div class="memories-gallery" id="memoriesGallery">
                     <div class="memories-loading">Loading memories...</div>
                 </div>
+            </div>
+
+            <div class="tab-content" id="tab-history" style="display:none;">
+                <div class="history-timeline" id="historyTimeline"></div>
             </div>
         </div>
     </div>
@@ -286,9 +292,15 @@
 
             if (tabName === 'memories') {
                 document.body.classList.add('memories-active');
+                document.body.classList.remove('history-active');
                 loadMemories();
+            } else if (tabName === 'history') {
+                document.body.classList.add('history-active');
+                document.body.classList.remove('memories-active');
+                renderTimeline();
             } else {
                 document.body.classList.remove('memories-active');
+                document.body.classList.remove('history-active');
             }
         }
 
@@ -334,6 +346,7 @@
                 return;
             }
 
+            const fragment = document.createDocumentFragment();
             sorted.forEach(({ file, date, author }) => {
                 const src = IMG_BASE + file;
                 const displayAuthor = author || DEFAULT_AUTHOR;
@@ -344,6 +357,8 @@
                 img.src = src;
                 img.alt = file;
                 img.loading = 'lazy';
+                img.decoding = 'async';
+                img.onload = () => img.classList.add('loaded');
                 img.onclick = () => openLightbox(src, date, displayAuthor);
 
                 const overlay = document.createElement('div');
@@ -366,9 +381,10 @@
 
                 item.appendChild(img);
                 item.appendChild(overlay);
-                gallery.appendChild(item);
+                fragment.appendChild(item);
             });
 
+            gallery.appendChild(fragment);
             memoriesLoaded = true;
         }
 
@@ -396,12 +412,106 @@
             const lightbox = document.getElementById('lightbox');
             lightbox.classList.remove('active');
             const isMemories = document.getElementById('tab-memories').style.display !== 'none';
-            document.body.style.overflow = isMemories ? 'auto' : 'hidden';
+            const isHistory = document.getElementById('tab-history').style.display !== 'none';
+            document.body.style.overflow = (isMemories || isHistory) ? '' : 'hidden';
         }
 
         document.addEventListener('keydown', e => {
             if (e.key === 'Escape') closeLightbox();
         });
+
+        // ── History Timeline ──
+        const HISTORY_EVENTS = [
+            {
+                date: '2024-11-01',
+                title: 'Server Start',
+                description: 'The 25dollarphone Minecraft server went live for the first time.',
+                icon: '🟢',
+                category: 'milestone'
+            },
+            {
+                date: '2024-11-15',
+                title: 'Path Construction Begins',
+                description: 'The community started building the main path network connecting all areas.',
+                icon: '🛤️',
+                category: 'build'
+            },
+            {
+                date: '2024-12-10',
+                title: 'Building a Staff Team',
+                description: 'Recruited and organized the first group of moderators and admins to help manage the server.',
+                icon: '🛡️',
+                category: 'team'
+            },
+            {
+                date: '2025-01-05',
+                title: 'Fighting Against Grief',
+                description: 'Major grief incident hit the server. The community rallied together to fight back and protect builds.',
+                icon: '⚔️',
+                category: 'crisis'
+            },
+            {
+                date: '2025-01-20',
+                title: 'Restoring Old Builds',
+                description: 'Massive restoration effort completed — griefed builds were recovered and rebuilt by the community.',
+                icon: '🔧',
+                category: 'recovery'
+            },
+            {
+                date: '2025-02-14',
+                title: 'Path Network Finished',
+                description: 'The full path system was completed, linking every major build and district on the server.',
+                icon: '✅',
+                category: 'milestone'
+            }
+        ];
+
+        let timelineRendered = false;
+
+        function renderTimeline() {
+            if (timelineRendered) return;
+            const container = document.getElementById('historyTimeline');
+            container.innerHTML = '';
+
+            const sorted = [...HISTORY_EVENTS].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            sorted.forEach((evt, i) => {
+                const node = document.createElement('div');
+                node.className = 'tl-node';
+                node.style.animationDelay = `${i * 0.12}s`;
+
+                const dot = document.createElement('div');
+                dot.className = 'tl-dot tl-cat-' + evt.category;
+                dot.textContent = evt.icon;
+
+                const card = document.createElement('div');
+                card.className = 'tl-card';
+
+                const dateEl = document.createElement('span');
+                dateEl.className = 'tl-date';
+                dateEl.textContent = new Date(evt.date).toLocaleDateString('en-US', {
+                    year: 'numeric', month: 'short', day: 'numeric'
+                });
+
+                const title = document.createElement('h3');
+                title.className = 'tl-title';
+                title.textContent = evt.title;
+
+                const desc = document.createElement('p');
+                desc.className = 'tl-desc';
+                desc.textContent = evt.description;
+
+                card.appendChild(dateEl);
+                card.appendChild(title);
+                card.appendChild(desc);
+
+                node.appendChild(dot);
+                node.appendChild(card);
+                container.appendChild(node);
+            });
+
+            timelineRendered = true;
+        }
     </script>
 </body>
 
