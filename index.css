@@ -436,6 +436,17 @@ body::before {
     color: #ccc;
 }
 
+.tab-btn.tab-locked {
+    color: #555;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.tab-btn.tab-locked:hover {
+    background: #313233;
+    color: #555;
+}
+
 .tab-btn.active {
     background: #3c8527;
     color: #fff;
@@ -677,45 +688,137 @@ body.history-active .container {
 
 .tl-dot {
     position: absolute;
-    left: -2.05rem;
-    top: 0.5rem;
-    width: 1.6rem;
-    height: 1.6rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.85rem;
-    border: 3px solid #1e1e1f;
+    left: -2.3rem;
+    top: 0.35rem;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #1a1a1a;
     border-radius: 0;
     background: #313233;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, .3);
     z-index: 2;
-    line-height: 1;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    overflow: hidden;
 }
 
+.tl-dot::before,
+.tl-dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+/* Grass block (milestone) — green top, dirt bottom */
 .tl-cat-milestone {
-    border-color: #3c8527;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, .3), 0 0 6px rgba(60, 133, 39, .35);
+    background:
+        linear-gradient(to bottom,
+            #5b8c2a 0%, #5b8c2a 25%,
+            #4a7a24 25%, #4a7a24 33%,
+            #8b6a3e 33%, #8b6a3e 50%,
+            #7a5c33 50%, #7a5c33 66%,
+            #6d5030 66%, #6d5030 83%,
+            #7a5c33 83%, #7a5c33 100%);
+    border-color: #1a1a1a;
+    box-shadow: 0 0 6px rgba(60, 133, 39, .4);
 }
 
+/* Oak planks (build) — horizontal plank lines */
 .tl-cat-build {
-    border-color: #c78c36;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, .3), 0 0 6px rgba(199, 140, 54, .25);
+    background:
+        linear-gradient(to bottom,
+            #bc9862 0%, #bc9862 20%,
+            #a07840 20%, #a07840 25%,
+            #c4a46a 25%, #c4a46a 45%,
+            #a07840 45%, #a07840 50%,
+            #b89058 50%, #b89058 70%,
+            #a07840 70%, #a07840 75%,
+            #c4a46a 75%, #c4a46a 100%);
+    border-color: #1a1a1a;
+    box-shadow: 0 0 6px rgba(199, 140, 54, .35);
 }
 
+/* Iron block (team) — silver with riveted panel look */
 .tl-cat-team {
-    border-color: #3b82c4;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, .3), 0 0 6px rgba(59, 130, 196, .25);
+    background:
+        linear-gradient(to bottom,
+            #d8d8d8 0%, #d8d8d8 8%,
+            #c0c0c0 8%, #c0c0c0 17%,
+            #d0d0d0 17%, #d0d0d0 42%,
+            #b8b8b8 42%, #b8b8b8 50%,
+            #cccccc 50%, #cccccc 58%,
+            #d0d0d0 58%, #d0d0d0 83%,
+            #b8b8b8 83%, #b8b8b8 92%,
+            #c8c8c8 92%, #c8c8c8 100%);
+    border-color: #1a1a1a;
+    box-shadow: 0 0 6px rgba(180, 180, 200, .35);
+}
+.tl-cat-team::before {
+    background:
+        linear-gradient(to right,
+            rgba(255,255,255,.15) 0%, rgba(255,255,255,.15) 17%,
+            transparent 17%, transparent 83%,
+            rgba(0,0,0,.08) 83%);
+}
+.tl-cat-team::after {
+    background: none;
 }
 
+/* Lava/Netherrack (crisis) — dark red with cracks of orange glow */
 .tl-cat-crisis {
-    border-color: #c43b3b;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, .3), 0 0 6px rgba(196, 59, 59, .3);
+    background: #6b2020;
+    border-color: #1a1a1a;
+    box-shadow: 0 0 8px rgba(255, 80, 20, .4);
+}
+.tl-cat-crisis::before {
+    background:
+        linear-gradient(to bottom,
+            #5a1a1a 0%, #5a1a1a 17%,
+            #7a2828 17%, #7a2828 33%,
+            #5a1a1a 33%, #5a1a1a 50%,
+            #6b2020 50%, #6b2020 67%,
+            #4d1515 67%, #4d1515 83%,
+            #6b2020 83%);
+}
+.tl-cat-crisis::after {
+    background:
+        linear-gradient(to right,
+            transparent 0%, transparent 25%,
+            rgba(255, 100, 20, .4) 25%, rgba(255, 100, 20, .4) 33%,
+            transparent 33%, transparent 58%,
+            rgba(255, 80, 10, .3) 58%, rgba(255, 80, 10, .3) 66%,
+            transparent 66%),
+        linear-gradient(to bottom,
+            transparent 0%, transparent 42%,
+            rgba(255, 120, 30, .35) 42%, rgba(255, 120, 30, .35) 50%,
+            transparent 50%, transparent 75%,
+            rgba(255, 90, 10, .25) 75%, rgba(255, 90, 10, .25) 83%,
+            transparent 83%);
 }
 
+/* Purpur block (recovery) — purple with lighter grid */
 .tl-cat-recovery {
-    border-color: #9b59b6;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, .3), 0 0 6px rgba(155, 89, 182, .25);
+    background: #9b59b6;
+    border-color: #1a1a1a;
+    box-shadow: 0 0 6px rgba(155, 89, 182, .35);
+}
+.tl-cat-recovery::before {
+    background:
+        linear-gradient(to bottom,
+            rgba(180, 120, 200, .5) 0%, rgba(180, 120, 200, .5) 8%,
+            transparent 8%, transparent 50%,
+            rgba(180, 120, 200, .5) 50%, rgba(180, 120, 200, .5) 58%,
+            transparent 58%);
+}
+.tl-cat-recovery::after {
+    background:
+        linear-gradient(to right,
+            rgba(180, 120, 200, .5) 0%, rgba(180, 120, 200, .5) 8%,
+            transparent 8%, transparent 50%,
+            rgba(180, 120, 200, .5) 50%, rgba(180, 120, 200, .5) 58%,
+            transparent 58%);
 }
 
 .tl-card {
@@ -764,17 +867,16 @@ body.history-active .container {
     }
 
     .history-timeline {
-        padding-left: 2rem;
+        padding-left: 2.2rem;
     }
 
     .tl-dot {
-        left: -1.65rem;
-        width: 1.3rem;
-        height: 1.3rem;
-        font-size: 0.7rem;
+        left: -1.85rem;
+        width: 14px;
+        height: 14px;
     }
 
     .history-timeline::before {
-        left: 0.8rem;
+        left: 0.85rem;
     }
 }

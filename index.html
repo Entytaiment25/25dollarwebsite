@@ -40,7 +40,7 @@
             <div class="tab-nav">
                 <button class="tab-btn active" data-tab="downloads" onclick="switchTab('downloads')">Downloads</button>
                 <button class="tab-btn" data-tab="memories" onclick="switchTab('memories')">Memories</button>
-                <button class="tab-btn" data-tab="history" onclick="switchTab('history')">History</button>
+                <button class="tab-btn tab-locked" data-tab="history" disabled>History 🔒</button>
             </div>
 
             <div class="tab-content tab-active" id="tab-downloads">
@@ -426,42 +426,36 @@
                 date: '2024-11-01',
                 title: 'Server Start',
                 description: 'The 25dollarphone Minecraft server went live for the first time.',
-                icon: '🟢',
                 category: 'milestone'
             },
             {
                 date: '2024-11-15',
                 title: 'Path Construction Begins',
                 description: 'The community started building the main path network connecting all areas.',
-                icon: '🛤️',
                 category: 'build'
             },
             {
                 date: '2024-12-10',
                 title: 'Building a Staff Team',
                 description: 'Recruited and organized the first group of moderators and admins to help manage the server.',
-                icon: '🛡️',
                 category: 'team'
             },
             {
                 date: '2025-01-05',
                 title: 'Fighting Against Grief',
                 description: 'Major grief incident hit the server. The community rallied together to fight back and protect builds.',
-                icon: '⚔️',
                 category: 'crisis'
             },
             {
                 date: '2025-01-20',
                 title: 'Restoring Old Builds',
                 description: 'Massive restoration effort completed — griefed builds were recovered and rebuilt by the community.',
-                icon: '🔧',
                 category: 'recovery'
             },
             {
                 date: '2025-02-14',
                 title: 'Path Network Finished',
                 description: 'The full path system was completed, linking every major build and district on the server.',
-                icon: '✅',
                 category: 'milestone'
             }
         ];
@@ -482,7 +476,6 @@
 
                 const dot = document.createElement('div');
                 dot.className = 'tl-dot tl-cat-' + evt.category;
-                dot.textContent = evt.icon;
 
                 const card = document.createElement('div');
                 card.className = 'tl-card';
