@@ -483,6 +483,7 @@ body::before {
     display: block;
     width: 100%;
     height: auto;
+    aspect-ratio: 16 / 9;
     image-rendering: auto;
     transition: transform 0.3s ease, opacity 0.3s ease;
     opacity: 0;
@@ -490,6 +491,7 @@ body::before {
 
 .memory-item img.loaded {
     opacity: 1;
+    aspect-ratio: auto;
 }
 
 .memory-item:hover img {
