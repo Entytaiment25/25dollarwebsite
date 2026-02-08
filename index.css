@@ -683,6 +683,12 @@ body.signwall-active .container {
     background: #a0632e;
     overflow-x: auto;
     overflow-y: hidden;
+    cursor: grab;
+    user-select: none;
+}
+
+.signwall-container.dragging {
+    cursor: grabbing;
 }
 
 .signwall-grid {
