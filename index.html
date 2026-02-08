@@ -509,9 +509,12 @@
                     });
                 }
 
-                // Apply dynamic grid sizing
-                grid.style.gridTemplateColumns = `repeat(${COLS}, 1fr)`;
-                grid.style.minWidth = `${COLS * 70}px`;
+                // Apply dynamic grid sizing using CSS-defined cell size
+                const gridStyles = getComputedStyle(grid);
+                const cellSize = parseFloat(gridStyles.getPropertyValue('--sign-cell-size')) || 80;
+                grid.style.gridTemplateColumns = `repeat(${COLS}, ${cellSize}px)`;
+                grid.style.gridAutoRows = `${cellSize}px`;
+                grid.style.minWidth = `${COLS * cellSize}px`;
 
                 let signCounter = 0;
                 for (let row = 0; row < usedRows.length; row++) {
