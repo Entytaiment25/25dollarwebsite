@@ -694,7 +694,7 @@ body.signwall-active .container {
 .signwall-grid {
     display: grid;
     /* columns and min-width set dynamically by JS */
-    --sign-cell-size: clamp(72px, 10vw, 120px);
+    --sign-cell-size: clamp(72px, 10vw, 150px);
 }
 
 .copper-cell {
@@ -754,10 +754,10 @@ body.signwall-active .container {
 .wall-sign {
     position: absolute;
     /* Sign covers most of the block face, slightly wider than tall like in-game */
-    left: 6%;
-    right: 6%;
-    top: 14%;
-    bottom: 14%;
+    left: 5%;
+    right: 5%;
+    top: 10%;
+    bottom: 10%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -804,14 +804,16 @@ body.signwall-active .container {
 
 .sign-line {
     font-family: MinecraftRegular, sans-serif;
-    font-size: clamp(0.5rem, 1.7cqi, 0.9rem);
-    line-height: 1.3;
+    font-size: clamp(0.45rem, 1.6cqi, 0.9rem);
+    line-height: 1.2;
     color: #3c3c3c;
     text-shadow: none;
-    white-space: nowrap;
+    white-space: normal;
     text-align: center;
     max-width: 100%;
     overflow: hidden;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 @media (max-width: 576px) {
@@ -820,7 +822,7 @@ body.signwall-active .container {
     }
 
     .signwall-grid {
-        --sign-cell-size: clamp(64px, 18vw, 92px);
+        --sign-cell-size: clamp(64px, 18vw, 120px);
     }
 
     .wall-sign {
