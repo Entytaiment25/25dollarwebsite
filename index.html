@@ -22,7 +22,8 @@
         }
 
         body.memories-active,
-        body.history-active {
+        body.history-active,
+        body.signwall-active {
             overflow-y: auto !important;
             align-items: flex-start;
         }
@@ -40,6 +41,7 @@
             <div class="tab-nav">
                 <button class="tab-btn active" data-tab="downloads" onclick="switchTab('downloads')">Downloads</button>
                 <button class="tab-btn" data-tab="memories" onclick="switchTab('memories')">Memories</button>
+                <button class="tab-btn" data-tab="signwall" onclick="switchTab('signwall')">Sign Wall</button>
                 <button class="tab-btn tab-locked" data-tab="history" disabled>History 🔒</button>
             </div>
 
@@ -87,6 +89,13 @@
                     Discord are 100% backed up.</div>
                 <div class="memories-gallery" id="memoriesGallery">
                     <div class="memories-loading">Loading memories...</div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-signwall" style="display:none;">
+                <div class="signwall-info">🪧 The community sign wall — leave your mark!</div>
+                <div class="signwall-container" id="signWallContainer">
+                    <div class="signwall-grid" id="signWallGrid"></div>
                 </div>
             </div>
 
@@ -292,15 +301,18 @@
 
             if (tabName === 'memories') {
                 document.body.classList.add('memories-active');
-                document.body.classList.remove('history-active');
+                document.body.classList.remove('history-active', 'signwall-active');
                 loadMemories();
+            } else if (tabName === 'signwall') {
+                document.body.classList.add('signwall-active');
+                document.body.classList.remove('memories-active', 'history-active');
+                renderSignWall();
             } else if (tabName === 'history') {
                 document.body.classList.add('history-active');
-                document.body.classList.remove('memories-active');
+                document.body.classList.remove('memories-active', 'signwall-active');
                 renderTimeline();
             } else {
-                document.body.classList.remove('memories-active');
-                document.body.classList.remove('history-active');
+                document.body.classList.remove('memories-active', 'history-active', 'signwall-active');
             }
         }
 
@@ -419,6 +431,130 @@
         document.addEventListener('keydown', e => {
             if (e.key === 'Escape') closeLightbox();
         });
+
+        // ── Sign Wall ──
+        // Signs loaded from signs.json
+        // Each sign: { col, row, text, color, glow }
+        // Grid size computed dynamically from actual sign positions
+
+        let signWallRendered = false;
+        let signWallData = null;
+
+        // Convert Minecraft ARGB hex (#ffRRGGBB) to CSS hex (#RRGGBB)
+        function convertColor(color) {
+            if (!color) return '#000000';
+            // Strip # prefix
+            const hex = color.replace('#', '');
+            // If 8 chars (ARGB), drop first 2 (alpha)
+            if (hex.length === 8) return '#' + hex.substring(2);
+            return color;
+        }
+
+        async function loadSignData() {
+            if (signWallData) return signWallData;
+            try {
+                const res = await fetch('signs.json');
+                if (!res.ok) throw new Error('Failed to load signs');
+                signWallData = await res.json();
+            } catch (e) {
+                console.error('Error loading sign data:', e);
+                signWallData = [];
+            }
+            return signWallData;
+        }
+
+        async function renderSignWall() {
+            if (signWallRendered) return;
+
+            const signs = await loadSignData();
+            const grid = document.getElementById('signWallGrid');
+            grid.innerHTML = '';
+
+            if (signs.length === 0) {
+                signWallRendered = true;
+                return;
+            }
+
+                // Group signs by row to preserve the original row ordering
+                const rowGroups = {};
+                let minCol = Infinity;
+                let maxCol = -Infinity;
+                signs.forEach(sign => {
+                    const r = sign.row ?? 0;
+                    const c = sign.col ?? 0;
+                    if (!rowGroups[r]) rowGroups[r] = [];
+                    rowGroups[r].push(sign);
+                    minCol = Math.min(minCol, c);
+                    maxCol = Math.max(maxCol, c);
+                });
+
+                const COLS = maxCol - minCol + 1;
+
+                // Map sign rows to wall rows — row 0 in JSON = bottom of wall, no gaps
+                const rowMapping = {};
+                const usedRows = Object.keys(rowGroups).map(Number).sort((a, b) => a - b);
+                usedRows.forEach((r, i) => {
+                    // Bottom-up, consecutive: row 0 -> 5, row 1 -> 4, row 2 -> 3
+                    rowMapping[r] = usedRows.length - 1 - i;
+                });
+
+                // Build lookup: wallRow -> Map<col, sign>
+                // Use actual col values, shifted left to remove empty columns
+                const wallSignMap = new Map();
+                for (const [signRow, group] of Object.entries(rowGroups)) {
+                    const wallRow = rowMapping[signRow] ?? parseInt(signRow, 10);
+                    group.forEach(sign => {
+                        const col = (sign.col ?? 0) - minCol;
+                        wallSignMap.set(`${col},${wallRow}`, sign);
+                    });
+                }
+
+                // Apply dynamic grid sizing
+                grid.style.gridTemplateColumns = `repeat(${COLS}, 1fr)`;
+                grid.style.minWidth = `${COLS * 70}px`;
+
+                let signCounter = 0;
+                for (let row = 0; row < usedRows.length; row++) {
+                    for (let col = 0; col < COLS; col++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'copper-cell';
+
+                    // Copper block background
+                    const block = document.createElement('div');
+                    block.className = 'copper-block';
+                    const hueShift = (Math.random() - 0.5) * 8;
+                    const lightShift = (Math.random() - 0.5) * 5;
+                    block.style.filter = `hue-rotate(${hueShift}deg) brightness(${1 + lightShift / 100})`;
+                    cell.appendChild(block);
+
+                    // Place sign if this cell has one
+                    const key = `${col},${row}`;
+                    if (wallSignMap.has(key)) {
+                        const sign = wallSignMap.get(key);
+                        const signEl = document.createElement('div');
+                        signEl.className = 'wall-sign';
+                        signEl.style.animationDelay = `${signCounter * 0.006}s`;
+                        signCounter++;
+
+                        const cssColor = convertColor(sign.color);
+                        const lines = sign.text.split('\n').slice(0, 4);
+                        lines.forEach(line => {
+                            const lineEl = document.createElement('div');
+                            lineEl.className = 'sign-line';
+                            lineEl.textContent = line;
+                            lineEl.style.color = cssColor;
+                            signEl.appendChild(lineEl);
+                        });
+
+                        cell.appendChild(signEl);
+                    }
+
+                    grid.appendChild(cell);
+                }
+            }
+
+            signWallRendered = true;
+        }
 
         // ── History Timeline ──
         const HISTORY_EVENTS = [
