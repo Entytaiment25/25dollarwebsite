@@ -474,50 +474,50 @@
                 return;
             }
 
-                // Group signs by row to preserve the original row ordering
-                const rowGroups = {};
-                let minCol = Infinity;
-                let maxCol = -Infinity;
-                signs.forEach(sign => {
-                    const r = sign.row ?? 0;
-                    const c = sign.col ?? 0;
-                    if (!rowGroups[r]) rowGroups[r] = [];
-                    rowGroups[r].push(sign);
-                    minCol = Math.min(minCol, c);
-                    maxCol = Math.max(maxCol, c);
+            // Group signs by row to preserve the original row ordering
+            const rowGroups = {};
+            let minCol = Infinity;
+            let maxCol = -Infinity;
+            signs.forEach(sign => {
+                const r = sign.row ?? 0;
+                const c = sign.col ?? 0;
+                if (!rowGroups[r]) rowGroups[r] = [];
+                rowGroups[r].push(sign);
+                minCol = Math.min(minCol, c);
+                maxCol = Math.max(maxCol, c);
+            });
+
+            const COLS = maxCol - minCol + 1;
+
+            // Map sign rows to wall rows — row 0 in JSON = bottom of wall, no gaps
+            const rowMapping = {};
+            const usedRows = Object.keys(rowGroups).map(Number).sort((a, b) => a - b);
+            usedRows.forEach((r, i) => {
+                // Bottom-up, consecutive: row 0 -> 5, row 1 -> 4, row 2 -> 3
+                rowMapping[r] = usedRows.length - 1 - i;
+            });
+
+            // Build lookup: wallRow -> Map<col, sign>
+            // Use actual col values, shifted left to remove empty columns
+            const wallSignMap = new Map();
+            for (const [signRow, group] of Object.entries(rowGroups)) {
+                const wallRow = rowMapping[signRow] ?? parseInt(signRow, 10);
+                group.forEach(sign => {
+                    const col = (sign.col ?? 0) - minCol;
+                    wallSignMap.set(`${col},${wallRow}`, sign);
                 });
+            }
 
-                const COLS = maxCol - minCol + 1;
+            // Apply dynamic grid sizing using CSS-defined cell size
+            const gridStyles = getComputedStyle(grid);
+            const cellSize = parseFloat(gridStyles.getPropertyValue('--sign-cell-size')) || 80;
+            grid.style.gridTemplateColumns = `repeat(${COLS}, ${cellSize}px)`;
+            grid.style.gridAutoRows = `${cellSize}px`;
+            grid.style.minWidth = `${COLS * cellSize}px`;
 
-                // Map sign rows to wall rows — row 0 in JSON = bottom of wall, no gaps
-                const rowMapping = {};
-                const usedRows = Object.keys(rowGroups).map(Number).sort((a, b) => a - b);
-                usedRows.forEach((r, i) => {
-                    // Bottom-up, consecutive: row 0 -> 5, row 1 -> 4, row 2 -> 3
-                    rowMapping[r] = usedRows.length - 1 - i;
-                });
-
-                // Build lookup: wallRow -> Map<col, sign>
-                // Use actual col values, shifted left to remove empty columns
-                const wallSignMap = new Map();
-                for (const [signRow, group] of Object.entries(rowGroups)) {
-                    const wallRow = rowMapping[signRow] ?? parseInt(signRow, 10);
-                    group.forEach(sign => {
-                        const col = (sign.col ?? 0) - minCol;
-                        wallSignMap.set(`${col},${wallRow}`, sign);
-                    });
-                }
-
-                // Apply dynamic grid sizing using CSS-defined cell size
-                const gridStyles = getComputedStyle(grid);
-                const cellSize = parseFloat(gridStyles.getPropertyValue('--sign-cell-size')) || 80;
-                grid.style.gridTemplateColumns = `repeat(${COLS}, ${cellSize}px)`;
-                grid.style.gridAutoRows = `${cellSize}px`;
-                grid.style.minWidth = `${COLS * cellSize}px`;
-
-                let signCounter = 0;
-                for (let row = 0; row < usedRows.length; row++) {
-                    for (let col = 0; col < COLS; col++) {
+            let signCounter = 0;
+            for (let row = 0; row < usedRows.length; row++) {
+                for (let col = 0; col < COLS; col++) {
                     const cell = document.createElement('div');
                     cell.className = 'copper-cell';
 
