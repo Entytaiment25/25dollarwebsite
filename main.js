@@ -605,6 +605,7 @@ async function renderTimeline() {
     container.innerHTML = '';
 
     const loaded = await loadHistoryEvents();
+    renderThanksList();
     if (!loaded || !Array.isArray(historyEvents) || historyEvents.length === 0) {
         container.innerHTML = '<div class="history-empty">No history yet</div>';
         timelineRendered = true;
@@ -646,8 +647,6 @@ async function renderTimeline() {
         node.appendChild(card);
         container.appendChild(node);
     });
-
-    renderThanksList();
 
     timelineRendered = true;
 }
