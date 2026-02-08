@@ -94,6 +94,8 @@ body::before {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
+    gap: 1rem;
     width: 100%;
     max-height: 100vh;
     padding: 1.5rem;
@@ -331,6 +333,156 @@ body::before {
     font-family: MinecraftRegular, sans-serif;
 }
 
+.ad-section {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.7rem;
+    align-items: center;
+    background: linear-gradient(135deg, rgba(58, 59, 60, .7) 0%, rgba(26, 26, 27, .75) 100%);
+    border: 2px solid #1e1e1f;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .08),
+        0 14px 28px rgba(0, 0, 0, .45);
+    padding: 0.55rem 0.65rem;
+    animation: slideDown 0.5s ease-out 0.6s both;
+    position: relative;
+    transform: translateY(2px);
+}
+
+.ad-card {
+    width: 100%;
+    max-width: 480px;
+}
+
+.ad-section::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border: 2px solid rgba(255, 255, 255, .05);
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.ad-section::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(255, 193, 7, .18);
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+.ad-tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.7px;
+    font-weight: bold;
+    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+    color: #1e1e1f;
+    border: 2px solid #1e1e1f;
+    padding: 0.15rem 0.35rem;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, .3);
+    box-shadow: inset 0 -2px 0 #cc7a00, inset 1px 1px 0 rgba(255, 235, 59, .6);
+}
+
+.ad-content {
+    min-width: 0;
+    white-space: nowrap;
+}
+
+.ad-kicker {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #9fb39f;
+    margin-bottom: 0.15rem;
+}
+
+.ad-title {
+    font-size: 0.86rem;
+    font-weight: bold;
+    color: #fff;
+    line-height: 1.2;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, .4);
+}
+
+.ad-meta {
+    font-size: 0.66rem;
+    color: #b9b9b9;
+    margin-top: 0.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.ad-username {
+    color: #3c8527;
+}
+
+.ad-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #2f3a2f 0%, #233123 100%);
+    border: 2px solid #1e1e1f;
+    color: #e6f0e6;
+    font-size: 0.72rem;
+    letter-spacing: 0.4px;
+    padding: 0.4rem 0.6rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    box-shadow:
+        inset 0 -3px 0 rgba(0, 0, 0, .35),
+        inset 1px 1px 0 rgba(255, 255, 255, .08);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    font-family: MinecraftRegular, sans-serif;
+    min-width: 180px;
+}
+
+.ad-cta:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        inset 0 -3px 0 rgba(0, 0, 0, .35),
+        inset 1px 1px 0 rgba(255, 255, 255, .08),
+        0 10px 20px rgba(0, 0, 0, .35);
+}
+
+.ad-cta:active {
+    transform: translateY(0);
+    box-shadow:
+        inset 0 -2px 0 rgba(0, 0, 0, .35),
+        inset 1px 1px 0 rgba(255, 255, 255, .08);
+}
+
+.ad-copy-link {
+    background: transparent;
+    border: none;
+    color: #9fb39f;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    font-family: MinecraftRegular, sans-serif;
+    cursor: pointer;
+    padding: 0;
+    text-align: center;
+    transition: color 0.15s ease;
+}
+
+.ad-copy-link:hover {
+    color: #cde1cd;
+}
+
+.ad-copy-link:active {
+    color: #fff;
+}
+
+.ad-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.25rem;
+}
+
 .site-footer {
     position: absolute;
     bottom: 12px;
@@ -411,6 +563,29 @@ body::before {
         min-height: 32px;
         padding: 0.3rem 0.6rem;
         font-size: 0.7rem;
+    }
+
+    .ad-section {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+
+    .ad-tag {
+        justify-self: flex-start;
+    }
+
+    .ad-cta {
+        width: 100%;
+    }
+
+    .ad-copy-link {
+        width: 100%;
+        text-align: center;
+    }
+
+    .ad-actions {
+        width: 100%;
     }
 }
 

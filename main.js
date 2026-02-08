@@ -174,16 +174,43 @@
         });
     }
 
+    function setupAdCopyButton() {
+        const adCopyBtn = document.getElementById('adCopyBtn');
+        if (!adCopyBtn) return;
+
+        adCopyBtn.addEventListener('click', () => {
+            const link = adCopyBtn.dataset.link || '';
+            if (!link) return;
+
+            navigator.clipboard.writeText(link).then(() => {
+                const originalText = adCopyBtn.textContent;
+                adCopyBtn.textContent = 'COPIED';
+                adCopyBtn.disabled = true;
+
+                setTimeout(() => {
+                    adCopyBtn.textContent = originalText;
+                    adCopyBtn.disabled = false;
+                }, COPY_FEEDBACK_DURATION);
+            }).catch(err => {
+                console.error('Failed to copy ad link:', err);
+            });
+        });
+    }
+
     window.updateDownloadLink = updateDownloadLink;
     window.copyChecksum = copyChecksum;
 
-    document.addEventListener('DOMContentLoaded', loadVersions);
+    document.addEventListener('DOMContentLoaded', () => {
+        loadVersions();
+        setupAdCopyButton();
+    });
 })();
 
 // Tab switching
 function switchTab(tabName) {
     const current = document.querySelector('.tab-content.tab-active');
     const next = document.getElementById('tab-' + tabName);
+    const adCard = document.getElementById('adCard');
 
     document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
     document.querySelector('.tab-btn[data-tab="' + tabName + '"]').classList.add('active');
@@ -219,6 +246,10 @@ function switchTab(tabName) {
         renderTimeline();
     } else {
         document.body.classList.remove('memories-active', 'history-active', 'signwall-active');
+    }
+
+    if (adCard) {
+        adCard.style.display = tabName === 'downloads' ? 'flex' : 'none';
     }
 }
 
