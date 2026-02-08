@@ -157,15 +157,30 @@
             }
 
             function getLatestVersion() {
-                return versions.reduce((latest, current) => {
+                const dated = versions.filter(version => {
+                    return version.date && !Number.isNaN(Date.parse(version.date));
+                });
+
+                if (!dated.length) {
+                    return versions[0];
+                }
+
+                return dated.reduce((latest, current) => {
                     return new Date(current.date) > new Date(latest.date) ? current : latest;
                 });
             }
 
+            function getVersionKey(version) {
+                return version.id || version.date || version.label || '';
+            }
+
             function createVersionOption(version, isLatest) {
                 const option = document.createElement('option');
-                option.value = version.date;
-                option.textContent = isLatest ? `${version.date} - Latest` : version.date;
+                option.value = getVersionKey(version);
+                const baseLabel = version.date
+                    ? (version.label ? `${version.date} - ${version.label}` : version.date)
+                    : (version.label || 'Untitled');
+                option.textContent = isLatest ? `${baseLabel} - Latest` : baseLabel;
                 return option;
             }
 
@@ -174,13 +189,20 @@
 
                 const dropdown = ELEMENTS.dropdown();
                 const latestVersion = getLatestVersion();
+                const latestKey = latestVersion ? getVersionKey(latestVersion) : '';
+                const preRender = versions.filter(version => version.id === 'seed-pre-render');
+                const dated = versions.filter(version => version.date);
+                const undated = versions.filter(version => !version.date && version.id !== 'seed-pre-render');
+                const sortedDated = [...dated].sort((a, b) => new Date(b.date) - new Date(a.date));
+                const restDated = sortedDated.filter(version => getVersionKey(version) !== latestKey);
+                const ordered = [latestVersion, ...preRender, ...restDated, ...undated].filter(Boolean);
 
-                versions.forEach(version => {
-                    const isLatest = version.date === latestVersion.date;
+                ordered.forEach(version => {
+                    const isLatest = getVersionKey(version) === latestKey;
                     dropdown.appendChild(createVersionOption(version, isLatest));
                 });
 
-                updateDownloadLink(versions[0].date);
+                updateDownloadLink(getVersionKey(ordered[0]));
             }
 
             function formatChecksum(checksum) {
@@ -230,8 +252,8 @@
                 checksumEl.dataset.full = version.checksum || '';
             }
 
-            function updateDownloadLink(versionDate) {
-                const version = versions.find(v => v.date === versionDate);
+            function updateDownloadLink(versionKey) {
+                const version = versions.find(v => getVersionKey(v) === versionKey);
                 if (!version) return;
 
                 updateFileInfo(version);

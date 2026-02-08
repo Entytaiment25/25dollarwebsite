@@ -1,5 +1,13 @@
 [
     {
+        "id": "seed-pre-render",
+        "label": "Seed Pre-Generated World - Voxy",
+        "magnetLink": "",
+        "httpsLink": "https://drive.google.com/file/d/14coeyNgD_8BAQpTP9gEDC9KlRr3_Zaok/view?usp=sharing",
+        "size": "3.27 GB",
+        "checksum": "none"
+    },
+    {
         "date": "2026-01-12",
         "magnetLink": "magnet:?xt=urn:btih:9a667d6f7215169c8f304cb7d21728c741d6955c&dn=worlds-2026-01-12.zip&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce",
         "httpsLink": "https://huggingface.co/bl791/25dollarphone/resolve/main/worlds-2026-01-12.zip",
