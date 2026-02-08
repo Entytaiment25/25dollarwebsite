@@ -2,6 +2,25 @@
     box-sizing: border-box;
 }
 
+body {
+    background: radial-gradient(ellipse at center, #3a3b3c 0%, #1a1a1b 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0 56px;
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+body.memories-active,
+body.history-active,
+body.signwall-active {
+    overflow-y: auto !important;
+    align-items: flex-start;
+}
+
 @keyframes fadeInBlock {
     0% {
         opacity: 0;
@@ -312,6 +331,30 @@ body::before {
     font-family: MinecraftRegular, sans-serif;
 }
 
+.site-footer {
+    position: absolute;
+    bottom: 12px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 0.7rem;
+    color: #9a9a9a;
+    font-family: MinecraftRegular, sans-serif;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.site-footer a {
+    color: #3c8527;
+    text-decoration: none;
+    pointer-events: auto;
+}
+
+.site-footer a:hover {
+    color: #4ea336;
+    text-decoration: underline;
+}
+
 @media (max-width: 576px) {
     .container {
         padding: 1rem;
@@ -434,17 +477,6 @@ body::before {
 .tab-btn:hover {
     background: #3a3b3c;
     color: #ccc;
-}
-
-.tab-btn.tab-locked {
-    color: #555;
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-
-.tab-btn.tab-locked:hover {
-    background: #313233;
-    color: #555;
 }
 
 .tab-btn.active {
@@ -793,9 +825,11 @@ body.signwall-active .container {
         opacity: 0;
         transform: scale(0.5);
     }
+
     60% {
         transform: scale(1.05);
     }
+
     100% {
         opacity: 1;
         transform: scale(1);
@@ -867,6 +901,69 @@ body.history-active .container {
     width: 3px;
     background: linear-gradient(180deg, transparent 0%, #3c8527 10%, #3c8527 90%, transparent 100%);
     border-radius: 2px;
+}
+
+.history-thanks {
+    margin-top: 1.6rem;
+    padding: 1rem 1.1rem;
+    background: #2a2b2c;
+    border: 2px solid #1e1e1f;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08);
+    animation: fadeInBlock 0.4s ease-out 0.1s both;
+}
+
+.history-thanks-title {
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #f2f2f2;
+    margin-bottom: 0.35rem;
+}
+
+.history-thanks-subtitle {
+    font-size: 0.85rem;
+    color: #c3c3c3;
+    margin-bottom: 0.75rem;
+}
+
+.history-thanks-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.5rem;
+}
+
+.history-thanks-list li {
+    position: relative;
+    padding-left: 0.9rem;
+    font-size: 0.9rem;
+    color: #e7e7e7;
+}
+
+.history-thanks-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    width: 6px;
+    height: 6px;
+    background: #3c8527;
+    box-shadow: 0 0 6px rgba(60, 133, 39, .4);
+}
+
+.thanks-name {
+    color: #9ad67c;
+    font-weight: 700;
+}
+
+.thanks-tag {
+    display: inline-block;
+    margin-left: 0.35rem;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #f0d36b;
 }
 
 .tl-node {
@@ -948,13 +1045,15 @@ body.history-active .container {
     border-color: #1a1a1a;
     box-shadow: 0 0 6px rgba(180, 180, 200, .35);
 }
+
 .tl-cat-team::before {
     background:
         linear-gradient(to right,
-            rgba(255,255,255,.15) 0%, rgba(255,255,255,.15) 17%,
+            rgba(255, 255, 255, .15) 0%, rgba(255, 255, 255, .15) 17%,
             transparent 17%, transparent 83%,
-            rgba(0,0,0,.08) 83%);
+            rgba(0, 0, 0, .08) 83%);
 }
+
 .tl-cat-team::after {
     background: none;
 }
@@ -965,6 +1064,7 @@ body.history-active .container {
     border-color: #1a1a1a;
     box-shadow: 0 0 8px rgba(255, 80, 20, .4);
 }
+
 .tl-cat-crisis::before {
     background:
         linear-gradient(to bottom,
@@ -975,6 +1075,7 @@ body.history-active .container {
             #4d1515 67%, #4d1515 83%,
             #6b2020 83%);
 }
+
 .tl-cat-crisis::after {
     background:
         linear-gradient(to right,
@@ -997,6 +1098,7 @@ body.history-active .container {
     border-color: #1a1a1a;
     box-shadow: 0 0 6px rgba(155, 89, 182, .35);
 }
+
 .tl-cat-recovery::before {
     background:
         linear-gradient(to bottom,
@@ -1005,6 +1107,7 @@ body.history-active .container {
             rgba(180, 120, 200, .5) 50%, rgba(180, 120, 200, .5) 58%,
             transparent 58%);
 }
+
 .tl-cat-recovery::after {
     background:
         linear-gradient(to right,
