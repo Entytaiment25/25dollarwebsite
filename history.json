@@ -58,6 +58,11 @@
             "name": "Ming",
             "contribution": "paths",
             "trusted": false
+        },
+        {
+            "name": "ByDavidElGamer",
+            "contribution": "Sniffer Home",
+            "trusted": false
         }
     ]
 }
