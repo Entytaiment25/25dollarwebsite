@@ -1,0 +1,63 @@
+{
+    "events": [
+        {
+            "date": "2025-12-18",
+            "title": "Server Start",
+            "description": "The 25dollarphone Minecraft server went live for the first time.",
+            "category": "milestone"
+        },
+        {
+            "date": "2025-12-24",
+            "title": "Open to the Public",
+            "description": "The server was opened to the public, allowing anyone to join and explore.",
+            "category": "milestone"
+        },
+        {
+            "date": "2026-01-26",
+            "title": "South Highway Completed",
+            "description": "5k x 5k Border",
+            "category": "milestone"
+        },
+        {
+            "date": "2026-01-29",
+            "title": "North Path Expanded",
+            "description": "to the new Border size",
+            "category": "milestone"
+        },
+        {
+            "date": "2026-11-15",
+            "title": "Path Construction Begins",
+            "description": "The community started building the main path network connecting all areas.",
+            "category": "build"
+        },
+        {
+            "date": "2026-02-01",
+            "title": "Building a Trusted Circle",
+            "description": "A group of trusted players formed a circle to help maintain the server and assist new players.",
+            "category": "team"
+        },
+        {
+            "date": "2027-01-05",
+            "title": "Fighting Against Grief",
+            "description": "Major grief incident hit the server. The community rallied together to fight back and protect builds.",
+            "category": "crisis"
+        }
+    ],
+    "thanks": [
+        {
+            "name": "Entytaiment25",
+            "contribution": "path network",
+            "trusted": true
+        },
+        {
+            "name": "Evi",
+            "contribution": "helped with paths",
+            "trusted": true
+        },
+        {
+            "name": "Ming",
+            "contribution": "paths",
+            "trusted": false
+        }
+    ]
+}
