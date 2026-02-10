@@ -13,14 +13,20 @@
             "category": "milestone"
         },
         {
-            "date": "2026-01-26",
+            "date": "2026-01-03",
             "title": "South Highway Completed",
             "description": "5k x 5k Border",
             "category": "milestone"
         },
         {
+            "date": "2026-01-26",
+            "title": "South Highway Expanded",
+            "description": "The South Highway was expanded to accommodate growth.",
+            "category": "milestone"
+        },
+        {
             "date": "2026-01-29",
-            "title": "North Path Expanded",
+            "title": "North Highway Expanded",
             "description": "to the new Border size",
             "category": "milestone"
         },
