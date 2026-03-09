@@ -8,7 +8,7 @@ set -euo pipefail
 
 DIR="public/img"
 OUT="$DIR/images.js"
-DEFAULT_AUTHOR="@jovannmc"
+DEFAULT_AUTHOR="@CHANGEME"
 IMAGE_EXTENSIONS="webp png jpg jpeg gif bmp"
 TMPFILE="$(mktemp)"
 
